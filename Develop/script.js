@@ -5,30 +5,26 @@ var lowerCase= null;
 var upperCase= null;
 var number= null;
 var specialCharacter = null;
-var temporaryCharacter =" ";
-var gotLowercase = 0;
-var gotUppercase = 0;
-var gotSpecialCharacter = 0;
-var gotNumber = 0;
+var temporaryCharacter ="";
 var gotCharacters = 0;
-var finalPassword = " ";
+var finalPassword = "";
 var characterArray = new Array();
-  for(var i = 0; i < passwordLength; i++){		
-    characterArray[i]	=	null;
-    }
+var arrayPosition			=	0;
+
 
 
 // Write password to the #password input
 function writePassword() {
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
-
   passwordText.value = password;
-
+  gotCharacters = 0;
+  finalPassword = "";
 }
 
-function question(characters, charactersString) {
-  characters = confirm("click ok if you want " + charactersString + " in your password")
+function question(charactersString) {
+  var characters = confirm("click ok if you want " + charactersString + " in your password")
+  return characters;
 }
 
 function generate_random(i_lower_number, i_top_number) {
@@ -40,7 +36,7 @@ function generate_random(i_lower_number, i_top_number) {
 function get_character(characterType){
   // we have created a specific list of characters, which also does not have some characters such as the uppercase "i" or the lowercase "l" to avoid transcription errors
   var characterList	=	"$+=?*!23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz";
-  var generatedCharacter	=	'';
+  var generatedCharacter	=	"";
   var lowerValue		=	0;
   var topValue		=	0;
 
@@ -69,7 +65,7 @@ function get_character(characterType){
 
   generatedCharacter	=	characterList.charAt(generate_random(lowerValue, topValue));
   return generatedCharacter;
-} // end of the function genera_caracter()
+} // end of the function gen_character)
 
 // function that saves in a random empty position the character passed by parameter
 function save_character_at_random_position(characterPassed){
@@ -87,6 +83,7 @@ function save_character_at_random_position(characterPassed){
   }
 }
 
+
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
 
@@ -101,61 +98,50 @@ function generatePassword(){
     return "click Generate Password again tu generate a valid password";
   }
   else {
-    question(lowerCase, "lowercase");
-    question(upperCase,"uppercase");
-    question(number, "number");
-    question(specialCharacter, "special characters");
+    lowerCase = question("lowercase");
+    upperCase = question("uppercase");
+    number = question( "number");
+    specialCharacter = question( "special characters");
+    if (lowerCase != true && upperCase !=true && number!=true && specialCharacter!=true) {
+      alert("you most choose at lest one type of character")
+      return 0;
+    }
   }
 
-  if (lowerCase==true) {
-    console.log("lollllllll")
-    while (gotLowercase < 1){
+  while (gotCharacters < passwordLength) {
+
+    if (lowerCase==true && gotCharacters < passwordLength) {
       temporaryCharacter	=	get_character("lowercase");
       save_character_at_random_position(temporaryCharacter);
-      got_lowercase_letters++;
-      got_characters++;
-    }  
-  }
-
-  if (upperCase==true) {
-    while (gotUppercase < 1){
+      gotCharacters++;
+    }
+  
+    if (upperCase==true && gotCharacters < passwordLength)  {
       temporaryCharacter	=	get_character("uppercase");
       save_character_at_random_position(temporaryCharacter);
-      gotUppercase++;
       gotCharacters++;
-    }  
-  }
-
-  if (number==true) {
-    while (gotNumber < 1){
+       
+    }
+  
+    if (number==true && gotCharacters < passwordLength) {
       temporaryCharacter	=	get_character("number");
       save_character_at_random_position(temporaryCharacter);
-      gotNumber++;
       gotCharacters++;
     }
-  }
-
-  if (specialCharacter==true) {
-    while (gotSpecialCharacter < 1){
+  
+    if (specialCharacter==true && gotCharacters < passwordLength) {
       temporaryCharacter	=	get_character("special character");
       save_character_at_random_position(temporaryCharacter);
-      gotSpecialCharacter++;
       gotCharacters++;
     }
-  }
-
-  // if we haven't generated all the characters we need, we randomly add the missing ones
-  // until we reach the password size that interests us
-  while (gotCharacters < passwordLength){
-    temporaryCharacter	=	get_character("random");
-    save_character_at_random_position(temporaryCharacter);
-    gotCharacters++;
   }
 
   // now we pass the content of the array to the variable password_definitive
   for(var i=0; i < characterArray.length; i++){
     finalPassword	=	finalPassword + characterArray[i];
   }
+  characterArray = new Array();
+
   return finalPassword;
 
 }
