@@ -1,0 +1,1 @@
+This project generates a strong password between 8 and 128 characters. First the user is asked what password length they want and then they are asked what type of character they want that password to have, later the generated password is displayed on the screen
